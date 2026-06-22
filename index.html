@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linuxコマンド道場 🐧 | インタラクティブ学習</title>
+  <meta name="description" content="模擬ターミナルでLinuxの基本コマンドを実際に打ちながら学べる学習サイト" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="logo">🐧</span>
+      <h1>Linuxコマンド道場</h1>
+    </div>
+    <div class="header-right">
+      <div class="progress-wrap" title="学習の進捗">
+        <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+        <span id="progressText" class="progress-text">0 / 0</span>
+      </div>
+      <button id="themeToggle" class="theme-btn" aria-label="テーマ切替">🌙</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- サイドバー：レッスン一覧 -->
+    <aside class="sidebar">
+      <h2 class="sidebar-title">レッスン</h2>
+      <ul id="lessonList" class="lesson-list"></ul>
+    </aside>
+
+    <!-- 中央：レッスン内容 -->
+    <section class="content">
+      <div id="lessonCard" class="lesson-card">
+        <!-- JSで描画 -->
+      </div>
+
+      <div class="quiz-card">
+        <h3>📝 ミッション</h3>
+        <p id="missionText" class="mission-text"></p>
+        <div id="missionStatus" class="mission-status"></div>
+      </div>
+    </section>
+
+    <!-- 右：模擬ターミナル -->
+    <section class="terminal-pane">
+      <div class="terminal-titlebar">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="terminal-title">user@dojo: ~</span>
+        <button id="resetFs" class="reset-btn" title="ファイルシステムをリセット">⟳ reset</button>
+      </div>
+      <div id="terminalOutput" class="terminal-output" aria-live="polite"></div>
+      <div class="terminal-input-line">
+        <span id="prompt" class="prompt">user@dojo:~$</span>
+        <input id="terminalInput" class="terminal-input" type="text"
+               autocomplete="off" autocapitalize="off" spellcheck="false"
+               placeholder="コマンドを入力して Enter（help と打つと一覧）" />
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>すべてブラウザ内で動く模擬ターミナルです。実機には影響しません。 ↑↓キーで履歴、Tabで補完、<code>help</code>でコマンド一覧。</p>
+  </footer>
+
+  <script src="filesystem.js"></script>
+  <script src="commands.js"></script>
+  <script src="lessons.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
