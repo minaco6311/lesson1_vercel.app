@@ -111,6 +111,80 @@
     promptEl.textContent = `user@dojo:${fs.cwdString()}$`;
   }
 
+  /* ---------- 花吹雪 ---------- */
+  function launchConfetti() {
+    const pane = document.querySelector('.terminal-pane');
+    const rect = pane.getBoundingClientRect();
+
+    const canvas = document.createElement('canvas');
+    canvas.width  = rect.width;
+    canvas.height = rect.height;
+    // position:fixed でターミナルの上に重ねる（overflow:hidden を回避）
+    canvas.style.cssText = [
+      'position:fixed',
+      `top:${rect.top}px`,
+      `left:${rect.left}px`,
+      `width:${rect.width}px`,
+      `height:${rect.height}px`,
+      'pointer-events:none',
+      'z-index:9999',
+      'border-radius:14px',
+    ].join(';');
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    const COLORS = ['#4ade80','#60a5fa','#f472b6','#facc15','#fb923c','#a78bfa','#34d399'];
+    const pieces = Array.from({ length: 140 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * -canvas.height * 0.4,
+      r: Math.random() * 7 + 4,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      vx: (Math.random() - 0.5) * 3,
+      vy: Math.random() * 3.5 + 2,
+      angle: Math.random() * Math.PI * 2,
+      spin: (Math.random() - 0.5) * 0.15,
+      shape: Math.random() > 0.5 ? 'rect' : 'circle',
+    }));
+
+    const DURATION = 3200;
+    const startTime = performance.now();
+
+    function draw(now) {
+      const elapsed = now - startTime;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const alpha = elapsed < DURATION - 700
+        ? 1
+        : Math.max(0, 1 - (elapsed - (DURATION - 700)) / 700);
+
+      pieces.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.angle += p.spin;
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.fillStyle = p.color;
+        if (p.shape === 'circle') {
+          ctx.beginPath();
+          ctx.arc(0, 0, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillRect(-p.r, -p.r / 2, p.r * 2, p.r);
+        }
+        ctx.restore();
+        if (p.y > canvas.height) { p.y = -10; p.x = Math.random() * canvas.width; }
+      });
+
+      if (elapsed < DURATION) {
+        requestAnimationFrame(draw);
+      } else {
+        canvas.remove();
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
   /* ---------- ミッション判定 ---------- */
   function checkMission() {
     const lesson = LESSONS[currentLesson];
@@ -128,6 +202,7 @@
       lessonCard.classList.remove('celebrate');
       void lessonCard.offsetWidth;
       lessonCard.classList.add('celebrate');
+      launchConfetti();
     } else {
       renderMissionStatus();
     }

@@ -40,6 +40,7 @@
         <p id="missionText" class="mission-text"></p>
         <div id="missionStatus" class="mission-status"></div>
       </div>
+
     </section>
 
     <!-- 右：模擬ターミナル -->
@@ -52,12 +53,16 @@
         <button id="resetFs" class="reset-btn" title="ファイルシステムをリセット">⟳ reset</button>
       </div>
       <div id="terminalOutput" class="terminal-output" aria-live="polite"></div>
-      <div class="terminal-input-line">
-        <span id="prompt" class="prompt">user@dojo:~$</span>
-        <input id="terminalInput" class="terminal-input" type="text"
-               autocomplete="off" autocapitalize="off" spellcheck="false"
-               placeholder="コマンドを入力して Enter（help と打つと一覧）" />
+      <div class="terminal-input-wrap">
+        <div class="terminal-input-label">⌨️ ここにコマンドを入力 → Enter で実行</div>
+        <div class="terminal-input-line">
+          <span id="prompt" class="prompt">user@dojo:~$</span>
+          <input id="terminalInput" class="terminal-input" type="text"
+                 autocomplete="off" autocapitalize="off" spellcheck="false"
+                 placeholder="例: ls  /  cd documents  /  help" />
+        </div>
       </div>
+      <div class="terminal-spacer"></div>
     </section>
   </main>
 

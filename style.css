@@ -31,9 +31,15 @@
 body {
   margin: 0;
   font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", "Noto Sans JP", system-ui, sans-serif;
-  background: var(--bg);
+  background: linear-gradient(135deg, #7aa3e8 0%, #93b8f0 40%, #b8d4f8 70%, #daeafd 100%);
+  background-attachment: fixed;
   color: var(--text);
   transition: background .25s, color .25s;
+}
+
+[data-theme="dark"] body {
+  background: linear-gradient(135deg, #1a2d6b 0%, #243d8f 40%, #3a5fc0 100%);
+  background-attachment: fixed;
 }
 
 /* ---------- Header ---------- */
@@ -147,37 +153,60 @@ body {
 /* ---------- Terminal ---------- */
 .terminal-pane {
   background: var(--term-bg);
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: var(--shadow);
+  box-shadow: 0 0 0 3px #2756c8, 0 12px 40px rgba(10, 30, 100, 0.55);
   display: flex;
   flex-direction: column;
   height: calc(100vh - 120px);
   position: sticky;
   top: 72px;
 }
+
+/* タイトルバーに「練習ターミナル」ラベルを追加できるよう余白確保 */
 .terminal-titlebar {
   display: flex; align-items: center; gap: .4rem;
   background: #1e293b;
-  padding: .5rem .8rem;
+  padding: .55rem .8rem;
+  border-bottom: 1px solid #334155;
 }
 .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
 .dot.red { background: #ff5f56; }
 .dot.yellow { background: #ffbd2e; }
 .dot.green { background: #27c93f; }
-.terminal-title { color: #94a3b8; font-size: .8rem; margin-left: .5rem; flex: 1; font-family: monospace; }
-.reset-btn { background: transparent; color: #94a3b8; border-color: #334155; font-size: .75rem; padding: .15rem .5rem; }
+.terminal-title {
+  color: #94a3b8; font-size: .8rem; margin-left: .4rem; flex: 1; font-family: monospace;
+}
+/* 「練習エリア」バッジ */
+.terminal-titlebar::after {
+  content: "✏️ 練習エリア";
+  font-size: .72rem;
+  font-family: "Segoe UI", sans-serif;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+  border: 1px solid rgba(74, 222, 128, 0.35);
+  border-radius: 99px;
+  padding: .1rem .55rem;
+  white-space: nowrap;
+}
+.reset-btn { background: transparent; color: #94a3b8; border-color: #334155; font-size: .75rem; padding: .15rem .5rem; margin-right: .3rem; }
 
 .terminal-output {
-  flex: 1;
+  flex: 0 0 auto;
   overflow-y: auto;
-  padding: .9rem 1rem;
+  padding: .9rem 1rem .4rem;
   font-family: "SFMono-Regular", Consolas, "Courier New", monospace;
-  font-size: .88rem;
-  line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.65;
   color: var(--term-text);
   white-space: pre-wrap;
   word-break: break-word;
+  max-height: 55vh;
+}
+
+.terminal-spacer {
+  flex: 1;
+  background: var(--term-bg);
 }
 .term-line { margin: 0; }
 .term-cmd { color: var(--term-text); }
@@ -187,21 +216,41 @@ body {
 .term-red { color: var(--term-red); }
 .term-muted { color: #64748b; }
 
+/* ターミナル内の入力エリア */
+.terminal-input-wrap {
+  flex-shrink: 0;
+  margin: .75rem .8rem .8rem;
+  padding: .65rem .9rem .75rem;
+  border: 2px solid #4ade80;
+  border-radius: 10px;
+  background: #0b1120;
+  box-shadow: 0 0 10px rgba(74, 222, 128, 0.15);
+}
+.terminal-input-label {
+  font-size: .95rem;
+  font-weight: 600;
+  color: #4ade80;
+  margin-bottom: .5rem;
+  font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", sans-serif;
+}
 .terminal-input-line {
   display: flex; align-items: center; gap: .5rem;
-  padding: .6rem 1rem;
-  background: #0b1120;
-  border-top: 1px solid #1e293b;
+  padding: .2rem 0;
 }
-.prompt { color: var(--term-green); font-family: monospace; font-size: .88rem; white-space: nowrap; }
+.terminal-input-wrap:focus-within {
+  box-shadow: 0 0 16px rgba(74, 222, 128, 0.35);
+  border-color: #6ee7b7;
+}
+.prompt { color: var(--term-green); font-family: monospace; font-size: 1.15rem; font-weight: bold; white-space: nowrap; }
 .terminal-input {
   flex: 1;
   background: transparent;
   border: none;
   outline: none;
-  color: var(--term-text);
+  color: #e2e8f0;
   font-family: "SFMono-Regular", Consolas, monospace;
-  font-size: .88rem;
+  font-size: 1.15rem;
+  caret-color: #4ade80;
 }
 
 /* ---------- Footer ---------- */
