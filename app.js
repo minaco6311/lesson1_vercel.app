@@ -202,6 +202,7 @@
       lessonCard.classList.remove('celebrate');
       void lessonCard.offsetWidth;
       lessonCard.classList.add('celebrate');
+      updateTerminalNav();
       launchConfetti();
     } else {
       renderMissionStatus();
@@ -252,7 +253,63 @@
     if (i < 0 || i >= LESSONS.length) return;
     currentLesson = i;
     renderLesson();
-    checkMission(); // すでに条件を満たしていれば反映
+    clearTerminalForLesson(LESSONS[i]);
+    updateTerminalNav();
+    checkMission();
+  }
+
+  function updateTerminalNav() {
+    const prev = document.getElementById('termPrevBtn');
+    const next = document.getElementById('termNextBtn');
+    const dotsEl = document.getElementById('termLessonDots');
+    if (!prev || !next) return;
+
+    prev.disabled = currentLesson === 0;
+    next.disabled = currentLesson === LESSONS.length - 1;
+    next.textContent = currentLesson === LESSONS.length - 1 ? '🎓 完了！' : '次のレッスンへ →';
+
+    // ドットインジケーター
+    if (dotsEl) {
+      dotsEl.innerHTML = '';
+      LESSONS.forEach((l, i) => {
+        const dot = document.createElement('span');
+        dot.className = 'term-lesson-dot' +
+          (i === currentLesson ? ' active' : completed.has(l.id) ? ' done' : '');
+        dotsEl.appendChild(dot);
+      });
+    }
+  }
+
+  function clearTerminalForLesson(lesson) {
+    output.innerHTML = '';
+    fs.reset();
+    updatePrompt();
+
+    // レッスンごとのヒント: [タイトル行(green), 説明(muted), コマンド例(blue)]
+    const hints = {
+      'intro':       ['📂 LESSON 01 — ls', 'ファイルの一覧を表示するコマンドです。',
+                      '▶ まずは ls と打ってみましょう！'],
+      'pwd-cd':      ['🧭 LESSON 02 — pwd / cd', '現在地の確認と移動のコマンドです。',
+                      '▶ ls で確認してから cd documents で移動しましょう。'],
+      'cat':         ['📄 LESSON 03 — cat', 'ファイルの中身を表示するコマンドです。',
+                      '▶ cat memo.txt で買い物メモを見てみましょう。'],
+      'mkdir-touch': ['🛠️ LESSON 04 — mkdir / touch', 'フォルダとファイルを作るコマンドです。',
+                      '▶ mkdir practice で新しいフォルダを作りましょう。'],
+      'echo-write':  ['✍️ LESSON 05 — echo >', 'ファイルへの書き込みコマンドです。',
+                      '▶ echo hello > greet.txt を試してみましょう。'],
+      'cp-mv-rm':    ['🔁 LESSON 06 — cp / mv / rm', 'コピー・移動・削除のコマンドです。',
+                      '▶ cp welcome.txt hello.txt でコピーしましょう。'],
+      'grep-wc':     ['🔍 LESSON 07 — grep / wc', '検索と集計のコマンドです。',
+                      '▶ grep ぱん memo.txt で「ぱん」を検索しましょう。'],
+      'graduation':  ['🎓 LESSON 08 — 総合演習', 'これまで学んだコマンドを組み合わせましょう。',
+                      '▶ mkdir backup → cp documents/report.txt backup/ → ls backup'],
+    };
+
+    const [title, desc, tip] = hints[lesson.id] || [`${lesson.icon} ${lesson.title}`, 'コマンドを入力して練習しましょう。', ''];
+    printLine(title, { className: 'term-green' });
+    printLine(desc,  { className: 'term-muted' });
+    if (tip) printLine(tip, { className: 'term-blue' });
+    printLine('');
   }
 
   function updateProgress() {
@@ -306,8 +363,20 @@
     }
   }
 
-  // ターミナル領域クリックで入力にフォーカス
-  $('.terminal-pane').addEventListener('click', () => input.focus());
+  // ターミナルナビゲーションボタン
+  document.getElementById('termPrevBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    gotoLesson(currentLesson - 1);
+  });
+  document.getElementById('termNextBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    gotoLesson(currentLesson + 1);
+  });
+
+  // ターミナル領域クリックで入力にフォーカス（ボタン以外）
+  $('.terminal-pane').addEventListener('click', (e) => {
+    if (!e.target.closest('button')) input.focus();
+  });
 
   /* ---------- リセット ---------- */
   $('#resetFs').addEventListener('click', () => {
@@ -331,12 +400,9 @@
   applyTheme(localStorage.getItem('linux_dojo_theme') || 'light');
 
   /* ---------- 初期化 ---------- */
-  printLine('Linuxコマンド道場 へようこそ！ 🐧', { className: 'term-green' });
-  printLine("左のレッスンを読みながら、ここにコマンドを打って練習しましょう。", { className: 'term-muted' });
-  printLine("まずは 'help' と打って Enter を押してみてください。\n", { className: 'term-muted' });
-
   renderLesson();
+  clearTerminalForLesson(LESSONS[0]);
+  updateTerminalNav();
   updateProgress();
-  updatePrompt();
   input.focus();
 })();

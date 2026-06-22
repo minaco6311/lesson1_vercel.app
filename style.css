@@ -48,8 +48,10 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: .75rem 1.25rem;
-  background: var(--panel);
-  border-bottom: 1px solid var(--panel-border);
+  background-color: #c7d2fe;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.55) 1.5px, transparent 1.5px);
+  background-size: 16px 16px;
+  border-bottom: none;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -207,6 +209,90 @@ body {
 .terminal-spacer {
   flex: 1;
   background: var(--term-bg);
+}
+
+.terminal-lesson-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .75rem 1rem;
+  background: linear-gradient(180deg, #0a1628 0%, #0d1f3c 100%);
+  border-top: 1px solid #1e3a5f;
+  flex-shrink: 0;
+  gap: .75rem;
+}
+
+/* 前へボタン：控えめなゴースト */
+.term-nav-btn-prev {
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid #334155;
+  color: #64748b;
+  border-radius: 99px;
+  padding: .45rem 1rem;
+  font-size: .85rem;
+  font-family: inherit;
+  transition: all .2s;
+  white-space: nowrap;
+}
+.term-nav-btn-prev:hover:not(:disabled) {
+  border-color: #4a78d4;
+  color: #93c5fd;
+}
+.term-nav-btn-prev:disabled { opacity: .25; cursor: default; }
+
+/* レッスン番号インジケーター */
+.term-lesson-label {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  flex: 1;
+  justify-content: center;
+}
+.term-lesson-dots {
+  display: flex;
+  gap: .3rem;
+}
+.term-lesson-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1e3a5f;
+  transition: background .3s, transform .3s;
+}
+.term-lesson-dot.active {
+  background: #4ade80;
+  transform: scale(1.3);
+}
+.term-lesson-dot.done { background: #2563eb; }
+
+/* 次へボタン：グラデーション＋グロー */
+.term-nav-btn-next {
+  cursor: pointer;
+  background: linear-gradient(90deg, #2563eb, #4ade80);
+  border: none;
+  color: #fff;
+  border-radius: 99px;
+  padding: .5rem 1.25rem;
+  font-size: .9rem;
+  font-weight: 700;
+  font-family: inherit;
+  box-shadow: 0 0 14px rgba(74, 222, 128, 0.35);
+  transition: all .2s;
+  white-space: nowrap;
+  letter-spacing: .02em;
+}
+.term-nav-btn-next:hover:not(:disabled) {
+  box-shadow: 0 0 22px rgba(74, 222, 128, 0.6);
+  transform: translateY(-1px) scale(1.03);
+}
+.term-nav-btn-next:disabled {
+  background: #1e293b;
+  box-shadow: none;
+  color: #4ade80;
+  cursor: default;
+  font-size: .82rem;
+  letter-spacing: 0;
 }
 .term-line { margin: 0; }
 .term-cmd { color: var(--term-text); }
